@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cinefyx — Soporte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #050A1A;
+      --surface:   #0C1530;
+      --border:    rgba(100, 140, 255, 0.12);
+      --cyan:      #4FC3F7;
+      --violet:    #9B59F5;
+      --mid:       #5B7BF8;
+      --text:      #E8EEFF;
+      --muted:     #7A8BB0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient glow ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 10%, rgba(79,195,247,.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 90%, rgba(155,89,245,.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 6vw, 5rem);
+      height: 64px;
+      background: rgba(5,10,26,.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: .02em;
+      background: linear-gradient(90deg, var(--cyan), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-logo svg { flex-shrink: 0; }
+
+    .nav-tag {
+      font-size: .75rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: clamp(5rem, 12vw, 9rem) clamp(1.5rem, 6vw, 5rem) clamp(4rem, 8vw, 7rem);
+    }
+
+    .hero-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(79,195,247,.15), rgba(155,89,245,.15));
+      border: 1px solid rgba(79,195,247,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 48px rgba(91,123,248,.2);
+    }
+
+    /* clapperboard SVG icon */
+    .hero-icon svg { width: 56px; height: 56px; }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1.1;
+      background: linear-gradient(120deg, var(--cyan) 0%, #7B9FFF 50%, var(--violet) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 500px;
+      font-weight: 300;
+    }
+
+    /* ── CARD GRID ── */
+    .cards {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 6vw, 5rem) clamp(4rem, 8vw, 7rem);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 2rem 1.75rem;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+    }
+
+    .card:hover {
+      border-color: rgba(91,123,248,.4);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(91,123,248,.12);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+      font-size: 1.3rem;
+    }
+
+    .card-icon.c1 { background: rgba(79,195,247,.12); }
+    .card-icon.c2 { background: rgba(155,89,245,.12); }
+    .card-icon.c3 { background: rgba(91,123,248,.12); }
+
+    .card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+      color: var(--text);
+    }
+
+    .card p {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── CONTACT SECTION ── */
+    .contact-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 6vw, 5rem) clamp(5rem, 10vw, 8rem);
+      text-align: center;
+    }
+
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--violet));
+      border-radius: 2px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .contact-wrap h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .contact-wrap p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: .95rem;
+    }
+
+    .email-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .85rem 2rem;
+      border-radius: 50px;
+      background: linear-gradient(135deg, rgba(79,195,247,.12), rgba(155,89,245,.12));
+      border: 1px solid rgba(91,123,248,.35);
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: .01em;
+      transition: background .25s, border-color .25s, transform .2s, box-shadow .25s;
+    }
+
+    .email-btn:hover {
+      background: linear-gradient(135deg, rgba(79,195,247,.22), rgba(155,89,245,.22));
+      border-color: rgba(91,123,248,.7);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(91,123,248,.2);
+    }
+
+    .email-btn svg { width: 18px; height: 18px; opacity: .8; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem clamp(1.5rem, 6vw, 5rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      background: linear-gradient(90deg, var(--cyan), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-note {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 480px) {
+      footer { justify-content: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <!-- Mini clapperboard icon -->
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+        <rect x="3" y="11" width="22" height="14" rx="3" fill="url(#nb)"/>
+        <!-- clapper arm -->
+        <path d="M3 13 L13 11 L18 8 L25 11" stroke="url(#nc)" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- heart/people mark -->
+        <path d="M10 19 Q14 15 18 19 Q14 23 10 19Z" fill="url(#nd)" opacity=".7"/>
+        <defs>
+          <linearGradient id="nb" x1="3" y1="11" x2="25" y2="25" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#4FC3F7"/><stop offset="1" stop-color="#9B59F5"/>
+          </linearGradient>
+          <linearGradient id="nc" x1="3" y1="11" x2="25" y2="8" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#7BB3FF"/><stop offset="1" stop-color="#C07EFF"/>
+          </linearGradient>
+          <linearGradient id="nd" x1="10" y1="15" x2="18" y2="23" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#4FC3F7"/><stop offset="1" stop-color="#9B59F5"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      Cinefyx
+    </div>
+    <span class="nav-tag">Soporte</span>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-icon">
+      <!-- Clapperboard with heart -->
+      <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="22" width="48" height="30" rx="6" fill="url(#hb)"/>
+        <!-- stripes top -->
+        <rect x="4" y="22" width="48" height="8" rx="4" fill="url(#hs)"/>
+        <!-- arm -->
+        <rect x="4" y="10" width="38" height="7" rx="3.5" fill="url(#ha)" transform="rotate(-15 4 10)"/>
+        <!-- two figures forming heart -->
+        <circle cx="20" cy="32" r="4" fill="url(#hc1)"/>
+        <circle cx="36" cy="32" r="4" fill="url(#hc2)"/>
+        <path d="M14 38 Q20 30 28 38 Q36 30 42 38 Q36 50 28 46 Q20 50 14 38Z" fill="url(#hh)" opacity=".85"/>
+        <defs>
+          <linearGradient id="hb" x1="4" y1="22" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#1A2B6B"/><stop offset="1" stop-color="#2D1270"/>
+          </linearGradient>
+          <linearGradient id="hs" x1="4" y1="22" x2="52" y2="30" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#4FC3F7"/><stop offset="1" stop-color="#9B59F5"/>
+          </linearGradient>
+          <linearGradient id="ha" x1="4" y1="10" x2="42" y2="17" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#6FC8FF"/><stop offset="1" stop-color="#B57EFF"/>
+          </linearGradient>
+          <linearGradient id="hc1" x1="16" y1="28" x2="24" y2="36" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#4FC3F7"/><stop offset="1" stop-color="#5B7BF8"/>
+          </linearGradient>
+          <linearGradient id="hc2" x1="32" y1="28" x2="40" y2="36" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#9B59F5"/><stop offset="1" stop-color="#C07EFF"/>
+          </linearGradient>
+          <linearGradient id="hh" x1="14" y1="30" x2="42" y2="50" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#4FC3F7"/><stop offset="1" stop-color="#9B59F5"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <h1>Cinefyx Soporte</h1>
+    <p class="hero-sub">Conectamos personas a través de sus gustos cinematográficos. Estamos aquí para ayudarte.</p>
+  </section>
+
+  <!-- CARDS -->
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon c1">🎬</div>
+      <h3>¿Qué es Cinefyx?</h3>
+      <p>Una aplicación para conectar personas a través de sus gustos cinematográficos. Descubrí perfiles afines, compartí opiniones y encontrá tu comunidad de cine.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon c2">💬</div>
+      <h3>¿Tenés algún problema?</h3>
+      <p>Si experimentás errores, problemas con tu cuenta o cualquier inconveniente técnico, escribinos. Respondemos a la brevedad.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon c3">🔒</div>
+      <h3>Privacidad y cuenta</h3>
+      <p>Para consultas sobre tu cuenta, datos personales o privacidad, contactanos directamente por correo electrónico.</p>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="contact-wrap">
+    <div class="divider"></div>
+    <h2>Contactanos</h2>
+    <p>Si necesitás ayuda con la aplicación, mandanos un correo y te respondemos lo antes posible.</p>
+    <a href="mailto:cinefyx.app@gmail.com" class="email-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="3"/>
+        <path d="M2 7l10 7 10-7"/>
+      </svg>
+      cinefyx.app@gmail.com
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-brand">Cinefyx</span>
+    <span class="footer-note">© 2026 Cinefyx — Todos los derechos reservados</span>
+  </footer>
+
+</body>
+</html>
